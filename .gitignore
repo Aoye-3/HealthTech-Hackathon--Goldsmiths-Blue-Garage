@@ -3,3 +3,4 @@ dist/
 *.log
 procuresmart-qa.png
 procuresmart-mobile-qa.png
+*-qa.png

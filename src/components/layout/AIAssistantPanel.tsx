@@ -35,36 +35,38 @@ interface AIAssistantPanelProps {
 export function AIAssistantPanel({ route }: AIAssistantPanelProps) {
   return (
     <aside className="ai-panel" aria-label="AI procurement assistant">
-      <div className="ai-header">
-        <div>
-          <Bot size={19} />
-          <strong>AI Procurement Assistant</strong>
+      <div className="ai-card">
+        <div className="ai-header">
+          <div>
+            <Bot size={18} />
+            <strong>AI Procurement Assistant</strong>
+          </div>
+          <span>Online</span>
         </div>
-        <span>Online</span>
-      </div>
-      <div className="ai-message primary">
-        <Sparkles size={16} />
-        <p>{pageInsights[route][0]}</p>
-      </div>
-      <div className="ai-list">
-        {pageInsights[route].slice(1).map((insight) => (
-          <p key={insight}>{insight}</p>
-        ))}
-      </div>
-      <div className="ai-prompt-stack">
-        <button type="button">View rationale</button>
-        <button type="button">Generate summary</button>
-        <button type="button">Ask about risks</button>
-      </div>
-      <label className="ai-input">
-        <span>Ask anything</span>
-        <div>
-          <input aria-label="Ask AI assistant" placeholder="Ask AI assistant..." />
-          <button type="button" aria-label="Send question">
-            <Send size={16} />
-          </button>
+        <div className="ai-message primary">
+          <Sparkles size={14} />
+          <p>{pageInsights[route][0]}</p>
         </div>
-      </label>
+        <div className="ai-list">
+          {pageInsights[route].slice(1).map((insight) => (
+            <p key={insight}>{insight}</p>
+          ))}
+        </div>
+        <div className="ai-prompt-stack">
+          <button type="button">View rationale</button>
+          <button type="button">Generate summary</button>
+          <button type="button">Ask about risks</button>
+        </div>
+        <label className="ai-input">
+          <span>Ask anything</span>
+          <div>
+            <input aria-label="Ask AI assistant" placeholder="Ask AI assistant..." />
+            <button type="button" aria-label="Send question">
+              <Send size={15} />
+            </button>
+          </div>
+        </label>
+      </div>
     </aside>
   );
 }
