@@ -9,7 +9,7 @@ import { ShortlistPage } from "./pages/ShortlistPage";
 import type { RouteKey } from "./types";
 import { getRouteKey } from "./utils/routing";
 
-function renderRoute(route: RouteKey) {
+function renderRoute(route: RouteKey, onNeedSubmit: () => void, needAnalysisStarted: boolean) {
   switch (route) {
     case "shortlist":
       return <ShortlistPage />;
@@ -22,12 +22,13 @@ function renderRoute(route: RouteKey) {
     case "outcomes":
       return <OutcomesPage />;
     default:
-      return <NeedDefinitionPage />;
+      return <NeedDefinitionPage onSubmitNeed={onNeedSubmit} submitted={needAnalysisStarted} />;
   }
 }
 
 export function App() {
   const [route, setRoute] = useState<RouteKey>(() => getRouteKey(window.location.pathname));
+  const [needAnalysisStarted, setNeedAnalysisStarted] = useState(false);
 
   useEffect(() => {
     const onRouteChange = () => setRoute(getRouteKey(window.location.pathname));
@@ -39,5 +40,12 @@ export function App() {
     return () => window.removeEventListener("popstate", onRouteChange);
   }, []);
 
-  return <AppShell activeRoute={route}>{renderRoute(route)}</AppShell>;
+  const workflowVisible = route !== "need-definition" || needAnalysisStarted;
+  const hideAssistantPanel = route === "need-definition" && needAnalysisStarted;
+
+  return (
+    <AppShell activeRoute={route} hideAssistantPanel={hideAssistantPanel} showWorkflow={workflowVisible}>
+      {renderRoute(route, () => setNeedAnalysisStarted(true), needAnalysisStarted)}
+    </AppShell>
+  );
 }
