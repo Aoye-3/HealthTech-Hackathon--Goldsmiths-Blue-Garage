@@ -36,7 +36,7 @@ export function ComparisonTable({ products }: ComparisonTableProps) {
             {row.label}
           </span>
           {row.values.map((value, index) => (
-            <strong className={index === 1 ? "recommended-cell" : ""} key={`${row.label}-${value}`} role="cell">
+            <strong className={index === 1 ? "recommended-cell" : ""} key={`${row.label}-${index}`} role="cell">
               {value}
             </strong>
           ))}

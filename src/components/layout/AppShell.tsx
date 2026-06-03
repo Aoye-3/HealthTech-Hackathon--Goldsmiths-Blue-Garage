@@ -8,18 +8,22 @@ import { Topbar } from "./Topbar";
 interface AppShellProps {
   activeRoute: RouteKey;
   children: ReactNode;
+  hideAssistantPanel?: boolean;
+  showWorkflow: boolean;
 }
 
-export function AppShell({ activeRoute, children }: AppShellProps) {
+export function AppShell({ activeRoute, children, hideAssistantPanel = false, showWorkflow }: AppShellProps) {
+  const showAssistantPanel = showWorkflow && !hideAssistantPanel;
+
   return (
     <div className="app-shell">
       <Sidebar activeRoute={activeRoute} />
       <main className="workspace">
         <Topbar />
-        <DecisionProgress activeRoute={activeRoute} />
-        <div className="workspace-grid">
+        {showWorkflow ? <DecisionProgress activeRoute={activeRoute} /> : null}
+        <div className={`workspace-grid ${showAssistantPanel ? "" : "full-width"}`}>
           <section className="page-surface">{children}</section>
-          <AIAssistantPanel route={activeRoute} />
+          {showAssistantPanel ? <AIAssistantPanel route={activeRoute} /> : null}
         </div>
       </main>
     </div>

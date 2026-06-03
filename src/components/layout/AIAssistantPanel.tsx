@@ -1,4 +1,5 @@
 import { Bot, Send, Sparkles } from "lucide-react";
+import { extractedThemes } from "../../data/procurementData";
 import type { RouteKey } from "../../types";
 
 const pageInsights: Record<RouteKey, string[]> = {
@@ -52,6 +53,16 @@ export function AIAssistantPanel({ route }: AIAssistantPanelProps) {
             <p key={insight}>{insight}</p>
           ))}
         </div>
+        {route === "need-definition" ? (
+          <div className="ai-keyword-analysis">
+            <strong>AI-extracted themes</strong>
+            <div>
+              {extractedThemes.map((theme) => (
+                <span key={theme}>{theme}</span>
+              ))}
+            </div>
+          </div>
+        ) : null}
         <div className="ai-prompt-stack">
           <button type="button">View rationale</button>
           <button type="button">Generate summary</button>

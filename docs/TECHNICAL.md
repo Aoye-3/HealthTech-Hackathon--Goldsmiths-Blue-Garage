@@ -1,68 +1,48 @@
-# ProcureSmart Technical Notes
+# ProcureSmart Technical Overview
 
-## Stack
-- React + Vite + TypeScript.
-- `lucide-react` for icons.
-- Static in-memory data for prototype behavior.
-- No backend integration in this version.
+## Purpose
+ProcureSmart is currently a frontend-first hackathon prototype for NHS primary care procurement workflows. The implemented app demonstrates the full user journey from clinical need definition through product comparison, peer evidence, approval pack generation, and outcomes feedback.
 
-## Project Structure
-- `src/App.tsx`: route selection and shell composition.
-- `src/components/layout`: app shell, sidebar, topbar, decision progress, AI assistant.
-- `src/components/procurement`: reusable procurement UI components.
-- `src/pages`: route-level page composition.
-- `src/data/procurementData.ts`: prototype products, reviews, metrics and approval sections.
-- `src/utils/routing.ts`: lightweight history navigation and formatting helpers.
-- `src/styles.css`: design tokens, layout, component and responsive styles.
+The next technical milestone is a minimum viable backend that can validate whether an AI-assisted API can analyse a clinical procurement prompt, filter product data, and support decision-making without turning the product into a clinical diagnosis or prescribing tool.
 
-## Routing
-Routing is intentionally lightweight for the hackathon prototype. `navigateTo()` updates browser history and dispatches a `popstate` event. `App.tsx` maps `window.location.pathname` to a route key and renders the matching page.
+## Current Implementation Status
+- Frontend: implemented.
+- Static product and evidence data: implemented.
+- Backend API: planned, not implemented.
+- AI provider integration: planned, not implemented.
+- Database or external NHS data integration: planned, not implemented.
 
-Supported routes:
-- `/` redirects to `/need-definition`.
-- `/need-definition`
-- `/shortlist`
-- `/compare`
-- `/peer-evidence/:productId`
-- `/approval-pack`
-- `/outcomes`
+## Current Stack
+- React 19
+- Vite 7
+- TypeScript 5.8
+- `lucide-react` for icons
+- Static in-memory data in `src/data/procurementData.ts`
+- Lightweight browser-history routing in `src/utils/routing.ts`
+- Playwright available for rendered UI verification
 
-## State Model
-- Shortlist selection is local to `ShortlistPage`.
-- Feedback rating, note and submission confirmation are local to `FeedbackForm`.
-- Product, evidence, approval and outcomes data are static mock data in `src/data/procurementData.ts`.
+## Planned MVP Backend Stack
+- Node.js + TypeScript
+- Minimal API service for need analysis, product filtering, and comparison recommendations
+- AI provider abstraction with OpenAI as the default candidate provider
+- Mock provider fallback for local demos and API-key-free frontend integration
+- Product data initially reused from the current frontend data shape, then migrated to JSON or database storage when needed
 
-## Design Source
-The implementation is based on the PRD, transcript notes, FigJam node screenshots and user-provided annotated images. The largest design constraints are:
-- NHS deep blue sidebar.
-- Consistent right-side AI assistant.
-- Persistent decision progress.
-- Evidence-led tables and cards.
-- Approval pack and outcomes views that support procurement governance, not only product discovery.
+## Documentation Index
+- [Frontend Architecture](./FRONTEND.md)
+- [MVP Backend Plan](./BACKEND.md)
+- [API Contract Draft](./API.md)
+- [AI Integration Plan](./AI-INTEGRATION.md)
+- [Runbook](./RUNBOOK.md)
+- [Documentation Maintenance](./DOCUMENTATION.md)
 
-## Runbook
-Install dependencies:
+## Source Documents
+- `PRD.md`: product workflow, user goals, and route-level acceptance criteria.
+- `DESIGN.md`: NHS visual direction, layout rules, component expectations, and interaction principles.
+- `docs/*`: technical architecture, implementation notes, and future integration contracts.
 
-```bash
-npm install
-```
-
-Run local development server:
-
-```bash
-npm run dev
-```
-
-Build:
-
-```bash
-npm run build
-```
-
-## Verification Checklist
-- Check `/need-definition`, `/shortlist`, `/compare`, `/peer-evidence/surebp-connect`, `/approval-pack`, and `/outcomes`.
-- Verify sidebar active state and visual consistency.
-- Click from need definition to shortlist, shortlist to comparison, comparison to approval pack.
-- Click evidence from a product card.
-- Submit outcomes feedback and confirm success message.
-- Inspect desktop and mobile widths for text overlap and overflow.
+## Design and Safety Constraints
+- The product is a procurement decision-support tool, not a clinical diagnosis or prescribing system.
+- AI output must be presented as procurement filtering and rationale support only.
+- User-facing AI decisions should require clinician or procurement lead review.
+- NHS-reviewed evidence, peer adoption, pricing transparency, and approval governance remain the core product signals.
