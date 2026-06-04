@@ -1,6 +1,7 @@
-import { Bot, Send, Sparkles } from "lucide-react";
-import { extractedThemes } from "../../data/procurementData";
+import { ArrowRight, Bot, ClipboardList, ExternalLink, Scale, Send, ShieldCheck, Sparkles } from "lucide-react";
+import { extractedThemes, products } from "../../data/procurementData";
 import type { RouteKey } from "../../types";
+import { buildPeerEvidencePath, navigateTo } from "../../utils/routing";
 
 const pageInsights: Record<RouteKey, string[]> = {
   "need-definition": [
@@ -8,15 +9,15 @@ const pageInsights: Record<RouteKey, string[]> = {
     "I will only surface NHS-reviewed options with visible evidence."
   ],
   shortlist: [
-    "These products best match remote monitoring, elderly usability and multi-site rollout requirements.",
-    "SureBP Connect currently has the strongest verified adoption signal."
+    "This product is evidence-aligned, widely used, and suitable for routine airway care.",
+    "FAG4212 provides the clearest catalogue match for tracheostomy site care."
   ],
   compare: [
-    "Product B offers the strongest balance of cost, verified outcomes and implementation support.",
-    "Product C is above peer benchmark by 12% based on your current quote."
+    "This second-round view compares shortlisted products using quote and evidence criteria.",
+    "FAG4279 is above peer benchmark by 12% based on your current quote."
   ],
   "peer-evidence": [
-    "I found 42 peer reviews for London PCNs and 15% adoption growth in similar practices.",
+    "This evidence view is linked to the selected product detail card.",
     "You can request a direct peer conversation before final approval."
   ],
   "approval-pack": [
@@ -34,6 +35,8 @@ interface AIAssistantPanelProps {
 }
 
 export function AIAssistantPanel({ route }: AIAssistantPanelProps) {
+  const recommendedProduct = products[1];
+
   return (
     <aside className="ai-panel" aria-label="AI procurement assistant">
       <div className="ai-card">
@@ -48,11 +51,39 @@ export function AIAssistantPanel({ route }: AIAssistantPanelProps) {
           <Sparkles size={14} />
           <p>{pageInsights[route][0]}</p>
         </div>
-        <div className="ai-list">
-          {pageInsights[route].slice(1).map((insight) => (
-            <p key={insight}>{insight}</p>
-          ))}
-        </div>
+        {route === "shortlist" ? (
+          <div className="shortlist-ai-flow">
+            <p className="ai-muted-card">{recommendedProduct.name} provides an easy to use airway care consumable option.</p>
+            <div className="ai-prompt-stack">
+              <button type="button"><ClipboardList size={16} /> First decision</button>
+              <button type="button" onClick={() => navigateTo("/compare")}><Scale size={16} /> Continue comparison</button>
+              <button type="button">Generate summary</button>
+              <button type="button"><ShieldCheck size={16} /> Ask about risks</button>
+            </div>
+            <section className="ai-product-cta">
+              <strong>{recommendedProduct.catalogueCode}</strong>
+              <button className="primary full" type="button" onClick={() => navigateTo(buildPeerEvidencePath(recommendedProduct.id))}>
+                View evidence
+                <ExternalLink size={16} />
+              </button>
+            </section>
+            <section className="ai-decision-card">
+              <h2>First decision</h2>
+              <p>Get early feedback on whether this product meets your requirements.</p>
+              <strong>{recommendedProduct.catalogueCode}</strong>
+              <button className="primary full" type="button" onClick={() => navigateTo("/compare")}>
+                Continue comparison
+                <ArrowRight size={16} />
+              </button>
+            </section>
+          </div>
+        ) : (
+          <div className="ai-list">
+            {pageInsights[route].slice(1).map((insight) => (
+              <p key={insight}>{insight}</p>
+            ))}
+          </div>
+        )}
         {route === "need-definition" ? (
           <div className="ai-keyword-analysis">
             <strong>AI-extracted themes</strong>
@@ -63,11 +94,13 @@ export function AIAssistantPanel({ route }: AIAssistantPanelProps) {
             </div>
           </div>
         ) : null}
-        <div className="ai-prompt-stack">
-          <button type="button">View rationale</button>
-          <button type="button">Generate summary</button>
-          <button type="button">Ask about risks</button>
-        </div>
+        {route !== "shortlist" ? (
+          <div className="ai-prompt-stack">
+            <button type="button">View rationale</button>
+            <button type="button">Generate summary</button>
+            <button type="button">Ask about risks</button>
+          </div>
+        ) : null}
         <label className="ai-input">
           <span>Ask anything</span>
           <div>

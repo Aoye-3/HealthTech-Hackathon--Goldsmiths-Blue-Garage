@@ -55,12 +55,15 @@ npm.cmd run preview
 2. Review the clinical need input and recommended procurement pathway.
 3. Click the send button to enter AI clarification state.
 4. Mark extracted filters as correct or wrong.
-5. Continue to product comparison.
-6. Navigate through product comparison, peer evidence, approval pack, and outcomes.
+5. Continue to Product Shortlist.
+6. Open a product detail card from the ProductList stack.
+7. Add products to comparison and continue to second-round comparison.
+8. Review product-specific peer evidence, then continue to approval pack and outcomes.
 
 ## Key Routes
 - `/need-definition`
 - `/shortlist`
+- `/shortlist/surebp-connect`
 - `/compare`
 - `/peer-evidence/surebp-connect`
 - `/approval-pack`
@@ -68,10 +71,12 @@ npm.cmd run preview
 
 ## Frontend Smoke Checklist
 - App loads without a framework error overlay.
-- Sidebar active state matches the route.
+- Sidebar active state matches the top-level workspace route.
 - Need definition can enter clarification state.
-- Filter confirmation can continue to comparison.
+- Filter confirmation can continue to Product Shortlist.
 - Product cards can be selected or deselected.
+- ProductList supports left/right product review and product detail navigation.
+- Product detail links to peer evidence for the selected product.
 - Comparison page highlights the recommended product.
 - Outcomes feedback can be submitted.
 - Desktop and mobile layouts remain readable.

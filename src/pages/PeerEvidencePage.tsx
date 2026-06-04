@@ -2,22 +2,29 @@ import { MessageSquare, Star, Users } from "lucide-react";
 import { EvidenceCard } from "../components/procurement/EvidenceCard";
 import { MetricCard } from "../components/procurement/MetricCard";
 import { peerReviews, products } from "../data/procurementData";
-import { navigateTo } from "../utils/routing";
+import { getProductIdFromPath, money, navigateTo } from "../utils/routing";
 
-export function PeerEvidencePage() {
-  const product = products[1];
+interface PeerEvidencePageProps {
+  pathname: string;
+}
+
+export function PeerEvidencePage({ pathname }: PeerEvidencePageProps) {
+  const productId = getProductIdFromPath(pathname);
+  const product = products.find((item) => item.id === productId) ?? products[1];
 
   return (
     <div className="page-stack">
       <div className="page-heading">
         <div>
-          <button className="link-button" type="button" onClick={() => navigateTo("/shortlist")}>Back to shortlist</button>
+          <button className="link-button" type="button" onClick={() => navigateTo(`/shortlist/${product.id}`)}>
+            Back to product details
+          </button>
           <h1>Peer Proof</h1>
           <p>Verified clinician reviews, regional adoption and implementation evidence for {product.name}.</p>
         </div>
       </div>
       <section className="product-evidence-header">
-        <div className={`product-image ${product.imageTone}`}><span>BP</span></div>
+        <div className={`product-image ${product.imageTone}`}><span>{product.brand.slice(0, 2).toUpperCase()}</span></div>
         <div>
           <span className="soft-badge">NHS reviewed</span>
           <h2>{product.name}</h2>
@@ -25,7 +32,7 @@ export function PeerEvidencePage() {
         </div>
         <MetricCard label="AI match" value={`${product.fitScore}%`} detail="Very strong fit" tone="green" />
         <MetricCard label="Clinician rating" value={`${product.rating} / 5`} detail={`${product.verifiedReviews} verified reviews`} tone="amber" />
-        <MetricCard label="Price range" value="£2.45 - £3.10" detail="Based on supplier quotes" tone="blue" />
+        <MetricCard label="Price range" value={`${money(product.benchmarkLow)} - ${money(product.benchmarkHigh)}`} detail="Based on supplier quotes" tone="blue" />
       </section>
       <div className="evidence-layout">
         <section className="map-panel">
@@ -45,7 +52,7 @@ export function PeerEvidencePage() {
         </section>
         <section className="evidence-summary">
           <MetricCard icon={Star} label="Evidence credibility" value="4.8 / 5" detail="Based on 142 clinical reviews" tone="amber" />
-          <MetricCard icon={Users} label="Verified NHS users" value="312" detail="Across PCNs and practices" tone="teal" />
+          <MetricCard icon={Users} label="Verified NHS users" value={`${product.organisationsUsing}`} detail="Across PCNs and practices" tone="teal" />
           <button className="primary full" type="button">
             <MessageSquare size={16} />
             Request peer conversation

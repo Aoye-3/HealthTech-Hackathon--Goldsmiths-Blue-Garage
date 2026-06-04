@@ -8,6 +8,8 @@ export type RouteKey =
   | "approval-pack"
   | "outcomes";
 
+export type ShortlistViewMode = "stack" | "detail";
+
 export interface NavItem {
   key: RouteKey;
   label: string;
@@ -17,10 +19,21 @@ export interface NavItem {
 
 export interface Product {
   id: string;
+  catalogueCode: string;
   name: string;
   category: string;
   supplier: string;
   brand: string;
+  mpc: string;
+  gtin: string;
+  unitOfIssue: string;
+  size: string;
+  clinicalArea: string;
+  returnStatus: string;
+  productType: string;
+  procurementNote: string;
+  dataSource: string;
+  leadTime?: string;
   unitPrice: number;
   benchmarkLow: number;
   benchmarkHigh: number;

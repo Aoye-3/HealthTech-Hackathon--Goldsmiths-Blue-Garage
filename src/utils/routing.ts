@@ -9,6 +9,22 @@ export function getRouteKey(pathname: string): RouteKey {
   return "need-definition";
 }
 
+export function getProductIdFromPath(pathname: string) {
+  const [, route, productId] = pathname.split("/");
+  if ((route === "shortlist" || route === "peer-evidence") && productId) {
+    return decodeURIComponent(productId);
+  }
+  return undefined;
+}
+
+export function buildShortlistDetailPath(productId: string) {
+  return `/shortlist/${encodeURIComponent(productId)}`;
+}
+
+export function buildPeerEvidencePath(productId: string) {
+  return `/peer-evidence/${encodeURIComponent(productId)}`;
+}
+
 export function navigateTo(path: string) {
   window.history.pushState({}, "", path);
   window.dispatchEvent(new PopStateEvent("popstate"));
