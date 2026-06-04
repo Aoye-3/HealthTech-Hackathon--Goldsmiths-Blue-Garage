@@ -17,7 +17,8 @@ interface DecisionProgressProps {
 }
 
 export function DecisionProgress({ activeRoute }: DecisionProgressProps) {
-  const activeIndex = order.indexOf(activeRoute);
+  const activeStep = activeRoute === "clinician-review" ? "peer-evidence" : activeRoute;
+  const activeIndex = order.indexOf(activeStep);
 
   return (
     <section className="decision-progress" aria-label="Procurement decision progress">

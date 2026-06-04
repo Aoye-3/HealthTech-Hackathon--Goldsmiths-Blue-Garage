@@ -367,9 +367,15 @@ button:disabled {
 }
 
 .page-stack:has(.evidence-layout),
+.page-stack:has(.clinician-review-grid),
 .page-stack:has(.approval-layout),
 .page-stack:has(.outcome-layout) {
   grid-template-rows: auto minmax(0, 1fr);
+}
+
+.page-stack.peer-evidence-page {
+  gap: 12px;
+  grid-template-rows: minmax(176px, 30%) minmax(0, 1fr);
 }
 
 .initial-intake {
@@ -1901,12 +1907,101 @@ button:disabled {
 .product-evidence-header {
   align-items: center;
   display: grid;
-  gap: 16px;
-  grid-template-columns: 120px minmax(0, 1fr) repeat(3, 170px);
+  gap: 12px;
+  grid-template-columns: 64px minmax(220px, 1fr) repeat(3, minmax(116px, 146px));
+  padding: 10px 12px;
 }
 
 .product-evidence-header .product-image {
-  height: 92px;
+  height: 64px;
+  width: 64px;
+}
+
+.product-evidence-header .product-image span {
+  font-size: 22px;
+  padding: 8px 12px;
+}
+
+.product-evidence-header h2 {
+  color: var(--ink);
+  display: -webkit-box;
+  font-size: 16px;
+  line-height: 1.2;
+  margin: 7px 0 3px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.product-evidence-header p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+.peer-evidence-heading {
+  align-items: end;
+}
+
+.peer-evidence-heading .link-button {
+  margin-bottom: 8px;
+  padding-left: 0;
+}
+
+.peer-evidence-title {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+  text-align: right;
+}
+
+.peer-evidence-title span {
+  color: var(--ink);
+  display: block;
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+.peer-evidence-title p {
+  max-width: 420px;
+}
+
+.peer-fixed-info {
+  display: grid;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.peer-fixed-info .page-heading h1 {
+  font-size: clamp(28px, 2.8vw, 36px);
+  margin-bottom: 0;
+}
+
+.peer-fixed-info .metric-card {
+  gap: 8px;
+  min-height: 74px;
+  padding: 10px;
+}
+
+.peer-fixed-info .metric-card strong {
+  font-size: 22px;
+}
+
+.peer-fixed-info .metric-card span,
+.peer-fixed-info .metric-card small {
+  font-size: 11px;
+}
+
+.peer-evidence-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .evidence-layout,
@@ -1921,6 +2016,11 @@ button:disabled {
 
 .evidence-layout {
   grid-template-columns: minmax(0, 1fr) 280px;
+}
+
+.peer-evidence-content .evidence-layout {
+  flex: 0 0 auto;
+  overflow: visible;
 }
 
 .map-heading h2 {
@@ -1941,10 +2041,14 @@ button:disabled {
   background-size: 52px 52px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  height: 320px;
+  height: clamp(230px, 32vh, 320px);
   margin-top: 14px;
   overflow: hidden;
   position: relative;
+}
+
+.peer-evidence-page .map-canvas {
+  height: clamp(210px, 24vh, 250px);
 }
 
 .map-pin {
@@ -1958,12 +2062,23 @@ button:disabled {
   height: 54px;
   justify-content: center;
   position: absolute;
+  transform: translate(-50%, -50%);
   width: 54px;
 }
 
+.map-pin.teal,
+.pin-b {
+  background: #087b83;
+}
+
+.map-pin.green,
+.pin-c {
+  background: #0f9d78;
+}
+
 .pin-a { left: 28%; top: 24%; }
-.pin-b { right: 26%; top: 46%; background: #087b83; }
-.pin-c { left: 43%; bottom: 18%; background: #0f9d78; }
+.pin-b { right: 26%; top: 46%; }
+.pin-c { left: 43%; bottom: 18%; }
 
 .implementation-count {
   background: rgba(255, 255, 255, 0.9);
@@ -1985,14 +2100,538 @@ button:disabled {
   display: grid;
   gap: 14px;
   min-height: 0;
-  overflow-y: auto;
-  padding-right: 4px;
+}
+
+.peer-review-section {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.review-scroller {
+  max-width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.review-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 0 0 44px;
+  scrollbar-width: none;
+  width: 100%;
+}
+
+.review-track::-webkit-scrollbar {
+  display: none;
+}
+
+.review-track .evidence-card {
+  flex: 0 0 min(430px, calc((100% - 28px) / 2.7));
+  min-height: 178px;
+}
+
+.review-scroll-control {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  bottom: 10px;
+  box-shadow: 0 10px 26px rgba(9, 37, 78, 0.1);
+  display: grid;
+  gap: 6px;
+  left: 14px;
+  padding: 10px 14px 12px;
+  position: absolute;
+  right: 14px;
+  z-index: 1;
+}
+
+.review-scroll-control span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.review-scroll-control input {
+  appearance: none;
+  accent-color: var(--nhs-blue);
+  background: #d7e4f3;
+  border-radius: 999px;
+  height: 6px;
+  margin: 4px 0;
+  touch-action: none;
+  width: 100%;
+}
+
+.review-scroll-control input::-webkit-slider-thumb {
+  appearance: none;
+  background: var(--nhs-blue);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(9, 37, 78, 0.24);
+  cursor: grab;
+  height: 20px;
+  width: 20px;
+}
+
+.review-scroll-control input::-moz-range-thumb {
+  background: var(--nhs-blue);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(9, 37, 78, 0.24);
+  cursor: grab;
+  height: 20px;
+  width: 20px;
 }
 
 .review-grid {
   display: grid;
   gap: 14px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.page-stack.clinician-review-page {
+  gap: 14px;
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.clinician-review-header {
+  align-items: end;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.clinician-review-header h1 {
+  color: var(--ink);
+  font-size: 30px;
+  line-height: 1.1;
+  margin: 8px 0 6px;
+}
+
+.clinician-review-header p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.verified-review-badge {
+  align-items: center;
+  background: #e7f7f3;
+  border: 1px solid #c4ece2;
+  border-radius: 8px;
+  color: var(--green);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 800;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.clinician-profile-card,
+.clinician-comment-card,
+.reviewed-product-card,
+.review-context-card,
+.review-breakdown-card,
+.review-approval-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.clinician-profile-card {
+  align-items: center;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 86px minmax(0, 1fr) auto;
+}
+
+.clinician-avatar {
+  align-items: center;
+  background: #d9ccfb;
+  border-radius: 50%;
+  color: var(--nhs-blue-dark);
+  display: flex;
+  font-size: 27px;
+  font-weight: 900;
+  height: 82px;
+  justify-content: center;
+  width: 82px;
+}
+
+.clinician-profile-card h2,
+.reviewed-product-card h3 {
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.clinician-profile-card p,
+.reviewed-product-card p,
+.clinician-comment-card p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.clinician-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.clinician-tags span {
+  background: #eaf3ff;
+  border-radius: 999px;
+  color: var(--nhs-blue);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 10px;
+}
+
+.clinician-rating {
+  display: grid;
+  gap: 6px;
+}
+
+.clinician-rating span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.clinician-rating strong {
+  color: var(--ink);
+  font-size: 26px;
+}
+
+.clinician-rating div {
+  color: var(--amber);
+  display: flex;
+  gap: 3px;
+}
+
+.clinician-rating small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.clinician-review-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr) minmax(280px, 0.9fr);
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.clinician-comment-card {
+  align-content: start;
+  display: grid;
+  gap: 18px;
+}
+
+.clinician-comment-card h2,
+.reviewed-product-card h2,
+.review-context-card h2,
+.review-breakdown-card h2,
+.review-approval-card h2 {
+  color: var(--ink);
+  font-size: 16px;
+  margin: 0;
+}
+
+.clinician-comment-card blockquote {
+  color: var(--nhs-blue-dark);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.reviewed-product-card {
+  display: grid;
+  gap: 16px;
+  grid-column: span 2;
+}
+
+.reviewed-product-main {
+  align-items: center;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 74px minmax(0, 1fr);
+}
+
+.reviewed-product-main .product-image {
+  border-radius: 8px;
+  height: 74px;
+  width: 74px;
+}
+
+.review-product-metrics {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.review-context-card,
+.review-breakdown-card,
+.review-relevance-card,
+.reported-impact-card,
+.review-limitations-card,
+.review-approval-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.review-context-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.review-context-grid div,
+.breakdown-row,
+.review-approval-card > div:first-of-type {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 24px minmax(0, 1fr);
+}
+
+.review-context-grid svg,
+.breakdown-row svg,
+.review-approval-card svg {
+  color: var(--nhs-blue);
+}
+
+.review-context-grid span,
+.breakdown-row span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.review-context-grid strong,
+.breakdown-row strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.review-context-note {
+  background: #eef5ff;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 0;
+  padding: 10px;
+}
+
+.breakdown-row {
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+}
+
+.breakdown-score {
+  align-items: center;
+  color: var(--amber);
+  display: flex;
+  gap: 8px;
+}
+
+.breakdown-score span {
+  display: flex;
+  gap: 2px;
+}
+
+.review-relevance-card {
+  grid-row: span 1;
+}
+
+.relevance-summary {
+  align-items: center;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 112px minmax(0, 1fr);
+}
+
+.relevance-ring {
+  align-items: center;
+  background: conic-gradient(var(--green) 0 87%, #dcefe9 87% 100%);
+  border-radius: 50%;
+  color: var(--green);
+  display: flex;
+  flex-direction: column;
+  height: 104px;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  width: 104px;
+}
+
+.relevance-ring::before {
+  background: #fff;
+  border-radius: 50%;
+  content: "";
+  inset: 10px;
+  position: absolute;
+}
+
+.relevance-ring strong,
+.relevance-ring span {
+  position: relative;
+}
+
+.relevance-ring strong {
+  font-size: 28px;
+}
+
+.relevance-ring span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  max-width: 72px;
+}
+
+.relevance-summary ul,
+.review-limitations-card ul {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.relevance-summary li {
+  align-items: center;
+  color: var(--ink);
+  display: flex;
+  font-size: 13px;
+  gap: 8px;
+}
+
+.relevance-summary li svg {
+  color: var(--green);
+  flex: 0 0 auto;
+}
+
+.evidence-gap,
+.review-limitations-card {
+  background: #fff5df;
+  border-color: #f4d9a3;
+}
+
+.evidence-gap {
+  align-items: start;
+  border-radius: 8px;
+  color: #9a6400;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 20px minmax(0, 1fr);
+  padding: 10px;
+}
+
+.evidence-gap p {
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.reported-impact-card {
+  grid-column: span 1;
+}
+
+.impact-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.impact-tile {
+  background: #f1f6ff;
+  border-radius: 8px;
+  color: var(--nhs-blue);
+  display: grid;
+  gap: 6px;
+  min-height: 86px;
+  padding: 10px;
+}
+
+.impact-tile.green {
+  color: var(--green);
+}
+
+.impact-tile span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.impact-tile strong {
+  font-size: 13px;
+}
+
+.reported-impact-card p,
+.review-approval-card p {
+  color: var(--muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.review-limitations-card li {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+  padding-left: 16px;
+  position: relative;
+}
+
+.review-limitations-card li::before {
+  background: #9a6400;
+  border-radius: 50%;
+  content: "";
+  height: 5px;
+  left: 0;
+  position: absolute;
+  top: 8px;
+  width: 5px;
+}
+
+.review-approval-card {
+  grid-column: span 2;
+}
+
+.review-approval-card > div:first-of-type {
+  align-items: start;
+}
+
+.approval-support-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.approval-support-tags span {
+  background: #eaf3ff;
+  border-radius: 999px;
+  color: var(--nhs-blue);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 10px;
+}
+
+.review-action-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .evidence-card {
@@ -2002,6 +2641,20 @@ button:disabled {
   display: grid;
   gap: 12px;
   padding: 16px;
+  text-align: left;
+}
+
+.evidence-card-button {
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  width: 100%;
+}
+
+.evidence-card-button:hover {
+  border-color: #9fc8f6;
+  box-shadow: 0 10px 24px rgba(9, 37, 78, 0.08);
+  transform: translateY(-1px);
 }
 
 .review-header {
@@ -2530,6 +3183,10 @@ button:disabled {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .page-stack.peer-evidence-page {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
   .detail-actions {
     grid-template-columns: 1fr;
   }
@@ -2596,6 +3253,27 @@ button:disabled {
   .detail-grid,
   .detail-actions {
     grid-template-columns: 1fr;
+  }
+
+  .peer-evidence-heading {
+    align-items: flex-start;
+  }
+
+  .peer-evidence-title {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .peer-evidence-title span {
+    font-size: 30px;
+  }
+
+  .peer-evidence-page .product-evidence-header {
+    grid-template-columns: 1fr;
+  }
+
+  .peer-evidence-page .product-evidence-header .product-image {
+    max-width: 112px;
   }
 
   .workspace {

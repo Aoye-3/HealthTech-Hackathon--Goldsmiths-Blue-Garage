@@ -28,7 +28,7 @@ The prototype demonstrates:
 - clinician feedback on extracted filters using Correct/Wrong actions;
 - transition from clarification into product shortlist review;
 - reviewed product shortlist, product detail, and second-round comparison views;
-- product-specific peer evidence, verified clinician reviews, and case-study style support;
+- product-specific peer evidence, horizontal clinician review browsing, review detail pages, and case-study style support;
 - approval pack preparation;
 - post-purchase outcome feedback.
 
@@ -112,7 +112,8 @@ npm.cmd run build
 5. Mark filters as Correct or Wrong.
 6. Continue to the product shortlist once the scope is narrow enough.
 7. Open a product detail card, add products to comparison, then continue to second-round comparison.
-8. Review peer evidence from product details or comparison before creating the approval pack.
+8. Review peer evidence from product details or comparison.
+9. Open a clinician review detail page from a verified review card before creating the approval pack.
 
 ## Key Routes
 
@@ -121,6 +122,7 @@ npm.cmd run build
 - `/shortlist/:productId`
 - `/compare`
 - `/peer-evidence/:productId`
+- `/peer-evidence/:productId/reviews/:reviewId`
 - `/approval-pack`
 - `/outcomes`
 
@@ -203,6 +205,7 @@ Recommended smoke check:
 - product shortlist can be reached from the clarification workflow.
 - product detail can be opened from the shortlist.
 - product comparison and peer evidence can be reached from ProductList detail or comparison actions.
+- clinician review details can be opened from product-specific peer evidence.
 - sidebar navigation reaches top-level workspace routes.
 - page-level scrolling stays contained inside work areas rather than the full browser document.
 

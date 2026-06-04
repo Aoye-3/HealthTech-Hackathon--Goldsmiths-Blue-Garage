@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AppShell } from "./components/layout/AppShell";
 import { ApprovalPackPage } from "./pages/ApprovalPackPage";
+import { ClinicianReviewPage } from "./pages/ClinicianReviewPage";
 import { ComparePage } from "./pages/ComparePage";
 import { NeedDefinitionPage } from "./pages/NeedDefinitionPage";
 import { OutcomesPage } from "./pages/OutcomesPage";
@@ -17,6 +18,8 @@ function renderRoute(route: RouteKey, pathname: string, onNeedSubmit: () => void
       return <ComparePage />;
     case "peer-evidence":
       return <PeerEvidencePage pathname={pathname} />;
+    case "clinician-review":
+      return <ClinicianReviewPage pathname={pathname} />;
     case "approval-pack":
       return <ApprovalPackPage />;
     case "outcomes":

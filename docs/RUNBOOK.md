@@ -58,7 +58,10 @@ npm.cmd run preview
 5. Continue to Product Shortlist.
 6. Open a product detail card from the ProductList stack.
 7. Add products to comparison and continue to second-round comparison.
-8. Review product-specific peer evidence, then continue to approval pack and outcomes.
+8. Review product-specific peer evidence.
+9. Use the review slider to browse verified clinician reviews.
+10. Open a clinician review detail page from a review card, then return to peer evidence.
+11. Continue to approval pack and outcomes.
 
 ## Key Routes
 - `/need-definition`
@@ -66,6 +69,7 @@ npm.cmd run preview
 - `/shortlist/surebp-connect`
 - `/compare`
 - `/peer-evidence/surebp-connect`
+- `/peer-evidence/surebp-connect/reviews/sarah-jenkins`
 - `/approval-pack`
 - `/outcomes`
 
@@ -77,6 +81,9 @@ npm.cmd run preview
 - Product cards can be selected or deselected.
 - ProductList supports left/right product review and product detail navigation.
 - Product detail links to peer evidence for the selected product.
+- Peer evidence renders product-specific evidence profile data.
+- Verified clinician review cards can open review detail subroutes.
+- The review detail subroute keeps the AI assistant panel clean until future behavior is implemented.
 - Comparison page highlights the recommended product.
 - Outcomes feedback can be submitted.
 - Desktop and mobile layouts remain readable.

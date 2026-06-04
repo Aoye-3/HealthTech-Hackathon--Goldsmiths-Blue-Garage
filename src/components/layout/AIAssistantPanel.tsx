@@ -1,44 +1,41 @@
 import { ArrowRight, Bot, ClipboardList, ExternalLink, Scale, Send, ShieldCheck, Sparkles } from "lucide-react";
-import { extractedThemes, products } from "../../data/procurementData";
-import type { RouteKey } from "../../types";
-import { buildPeerEvidencePath, navigateTo } from "../../utils/routing";
+import { buildAssistantContext } from "../../data/assistantContext";
+import { extractedThemes } from "../../data/procurementData";
+import type { AssistantAction, RouteKey } from "../../types";
+import { navigateTo } from "../../utils/routing";
 
-const pageInsights: Record<RouteKey, string[]> = {
-  "need-definition": [
-    "Your request indicates remote monitoring, older patients and multi-practice rollout.",
-    "I will only surface NHS-reviewed options with visible evidence."
-  ],
-  shortlist: [
-    "This product is evidence-aligned, widely used, and suitable for routine airway care.",
-    "FAG4212 provides the clearest catalogue match for tracheostomy site care."
-  ],
-  compare: [
-    "This second-round view compares shortlisted products using quote and evidence criteria.",
-    "FAG4279 is above peer benchmark by 12% based on your current quote."
-  ],
-  "peer-evidence": [
-    "This evidence view is linked to the selected product detail card.",
-    "You can request a direct peer conversation before final approval."
-  ],
-  "approval-pack": [
-    "The pack is ready for internal review. Evidence completeness is 94%.",
-    "All required quotes and verified peer reviews are attached."
-  ],
-  outcomes: [
-    "Issue volume is down 28% this quarter compared to the previous period.",
-    "Your feedback will support future NHS procurement decisions."
-  ]
+const actionIcons: Record<string, typeof ClipboardList> = {
+  "First decision": ClipboardList,
+  "Continue comparison": Scale,
+  "Ask about risks": ShieldCheck
 };
 
 interface AIAssistantPanelProps {
   route: RouteKey;
 }
 
-export function AIAssistantPanel({ route }: AIAssistantPanelProps) {
-  const recommendedProduct = products[1];
+function renderAction(action: AssistantAction) {
+  const Icon = actionIcons[action.label];
+  const handleClick = () => {
+    if (action.kind === "navigation" && action.targetPath) {
+      navigateTo(action.targetPath);
+    }
+  };
 
   return (
-    <aside className="ai-panel" aria-label="AI procurement assistant">
+    <button key={action.label} type="button" onClick={handleClick}>
+      {Icon ? <Icon size={16} /> : null}
+      {action.label}
+    </button>
+  );
+}
+
+export function AIAssistantPanel({ route }: AIAssistantPanelProps) {
+  const context = buildAssistantContext(route);
+  const clean = context.mode === "clean";
+
+  return (
+    <aside className="ai-panel" aria-label="AI procurement assistant" data-conversation-scope={context.conversationScope}>
       <div className="ai-card">
         <div className="ai-header">
           <div>
@@ -47,60 +44,67 @@ export function AIAssistantPanel({ route }: AIAssistantPanelProps) {
           </div>
           <span>Online</span>
         </div>
-        <div className="ai-message primary">
-          <Sparkles size={14} />
-          <p>{pageInsights[route][0]}</p>
-        </div>
-        {route === "shortlist" ? (
-          <div className="shortlist-ai-flow">
-            <p className="ai-muted-card">{recommendedProduct.name} provides an easy to use airway care consumable option.</p>
-            <div className="ai-prompt-stack">
-              <button type="button"><ClipboardList size={16} /> First decision</button>
-              <button type="button" onClick={() => navigateTo("/compare")}><Scale size={16} /> Continue comparison</button>
-              <button type="button">Generate summary</button>
-              <button type="button"><ShieldCheck size={16} /> Ask about risks</button>
-            </div>
-            <section className="ai-product-cta">
-              <strong>{recommendedProduct.catalogueCode}</strong>
-              <button className="primary full" type="button" onClick={() => navigateTo(buildPeerEvidencePath(recommendedProduct.id))}>
-                View evidence
-                <ExternalLink size={16} />
-              </button>
-            </section>
-            <section className="ai-decision-card">
-              <h2>First decision</h2>
-              <p>Get early feedback on whether this product meets your requirements.</p>
-              <strong>{recommendedProduct.catalogueCode}</strong>
-              <button className="primary full" type="button" onClick={() => navigateTo("/compare")}>
-                Continue comparison
-                <ArrowRight size={16} />
-              </button>
-            </section>
-          </div>
-        ) : (
-          <div className="ai-list">
-            {pageInsights[route].slice(1).map((insight) => (
-              <p key={insight}>{insight}</p>
-            ))}
-          </div>
+        {clean ? null : (
+          <>
+            {context.primaryMessage ? (
+              <div className="ai-message primary">
+                <Sparkles size={14} />
+                <p>{context.primaryMessage}</p>
+              </div>
+            ) : null}
+            {route === "shortlist" ? (
+              <div className="shortlist-ai-flow">
+                {context.secondaryMessages.map((message) => (
+                  <p className="ai-muted-card" key={message}>{message}</p>
+                ))}
+                <div className="ai-prompt-stack">
+                  {context.actions.map(renderAction)}
+                </div>
+                {context.productCta ? (
+                  <section className="ai-product-cta">
+                    <strong>{context.productCta.label}</strong>
+                    <button className="primary full" type="button" onClick={() => navigateTo(context.productCta?.targetPath ?? "")}>
+                      View evidence
+                      <ExternalLink size={16} />
+                    </button>
+                  </section>
+                ) : null}
+                {context.decisionCard ? (
+                  <section className="ai-decision-card">
+                    <h2>{context.decisionCard.title}</h2>
+                    <p>{context.decisionCard.body}</p>
+                    <strong>{context.decisionCard.productCode}</strong>
+                    <button className="primary full" type="button" onClick={() => navigateTo(context.decisionCard?.targetPath ?? "")}>
+                      Continue comparison
+                      <ArrowRight size={16} />
+                    </button>
+                  </section>
+                ) : null}
+              </div>
+            ) : (
+              <>
+                <div className="ai-list">
+                  {context.secondaryMessages.map((message) => (
+                    <p key={message}>{message}</p>
+                  ))}
+                </div>
+                <div className="ai-prompt-stack">
+                  {context.actions.map(renderAction)}
+                </div>
+              </>
+            )}
+            {route === "need-definition" ? (
+              <div className="ai-keyword-analysis">
+                <strong>AI-extracted themes</strong>
+                <div>
+                  {extractedThemes.map((theme) => (
+                    <span key={theme}>{theme}</span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </>
         )}
-        {route === "need-definition" ? (
-          <div className="ai-keyword-analysis">
-            <strong>AI-extracted themes</strong>
-            <div>
-              {extractedThemes.map((theme) => (
-                <span key={theme}>{theme}</span>
-              ))}
-            </div>
-          </div>
-        ) : null}
-        {route !== "shortlist" ? (
-          <div className="ai-prompt-stack">
-            <button type="button">View rationale</button>
-            <button type="button">Generate summary</button>
-            <button type="button">Ask about risks</button>
-          </div>
-        ) : null}
         <label className="ai-input">
           <span>Ask anything</span>
           <div>
