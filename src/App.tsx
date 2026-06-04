@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AppShell } from "./components/layout/AppShell";
 import { ApprovalPackPage } from "./pages/ApprovalPackPage";
+import { ClinicianReviewPage } from "./pages/ClinicianReviewPage";
 import { ComparePage } from "./pages/ComparePage";
 import { NeedDefinitionPage } from "./pages/NeedDefinitionPage";
 import { OutcomesPage } from "./pages/OutcomesPage";
@@ -9,14 +10,16 @@ import { ShortlistPage } from "./pages/ShortlistPage";
 import type { RouteKey } from "./types";
 import { getRouteKey } from "./utils/routing";
 
-function renderRoute(route: RouteKey, onNeedSubmit: () => void, needAnalysisStarted: boolean) {
+function renderRoute(route: RouteKey, pathname: string, onNeedSubmit: () => void, needAnalysisStarted: boolean) {
   switch (route) {
     case "shortlist":
-      return <ShortlistPage />;
+      return <ShortlistPage pathname={pathname} />;
     case "compare":
       return <ComparePage />;
     case "peer-evidence":
-      return <PeerEvidencePage />;
+      return <PeerEvidencePage pathname={pathname} />;
+    case "clinician-review":
+      return <ClinicianReviewPage pathname={pathname} />;
     case "approval-pack":
       return <ApprovalPackPage />;
     case "outcomes":
@@ -28,10 +31,14 @@ function renderRoute(route: RouteKey, onNeedSubmit: () => void, needAnalysisStar
 
 export function App() {
   const [route, setRoute] = useState<RouteKey>(() => getRouteKey(window.location.pathname));
+  const [pathname, setPathname] = useState(() => window.location.pathname);
   const [needAnalysisStarted, setNeedAnalysisStarted] = useState(false);
 
   useEffect(() => {
-    const onRouteChange = () => setRoute(getRouteKey(window.location.pathname));
+    const onRouteChange = () => {
+      setPathname(window.location.pathname);
+      setRoute(getRouteKey(window.location.pathname));
+    };
     window.addEventListener("popstate", onRouteChange);
     if (window.location.pathname === "/") {
       window.history.replaceState({}, "", "/need-definition");
@@ -45,7 +52,7 @@ export function App() {
 
   return (
     <AppShell activeRoute={route} hideAssistantPanel={hideAssistantPanel} showWorkflow={workflowVisible}>
-      {renderRoute(route, () => setNeedAnalysisStarted(true), needAnalysisStarted)}
+      {renderRoute(route, pathname, () => setNeedAnalysisStarted(true), needAnalysisStarted)}
     </AppShell>
   );
 }

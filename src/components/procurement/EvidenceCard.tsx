@@ -2,12 +2,14 @@ import { BadgeCheck, Star } from "lucide-react";
 import type { Review } from "../../types";
 
 interface EvidenceCardProps {
+  interactive?: boolean;
+  onClick?: () => void;
   review: Review;
 }
 
-export function EvidenceCard({ review }: EvidenceCardProps) {
-  return (
-    <article className="evidence-card">
+export function EvidenceCard({ interactive = false, onClick, review }: EvidenceCardProps) {
+  const content = (
+    <>
       <div className="review-header">
         <div className="review-avatar">{review.clinician.split(" ").map((part) => part[0]).join("")}</div>
         <div>
@@ -26,6 +28,20 @@ export function EvidenceCard({ review }: EvidenceCardProps) {
         ) : null}
       </div>
       <p>"{review.quote}"</p>
+    </>
+  );
+
+  if (interactive || onClick) {
+    return (
+      <button className="evidence-card evidence-card-button" data-review-id={review.id} type="button" onClick={onClick}>
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <article className="evidence-card" data-review-id={review.id}>
+      {content}
     </article>
   );
 }

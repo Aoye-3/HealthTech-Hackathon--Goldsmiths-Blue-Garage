@@ -175,8 +175,8 @@ export function NeedDefinitionPage({ onSubmitNeed, submitted }: NeedDefinitionPa
                   <strong>Scope is narrow enough for product comparison.</strong>
                   <p>Continue to compare NHS-reviewed products against the confirmed need.</p>
                 </div>
-                <button className="primary" type="button" onClick={() => navigateTo("/compare")}>
-                  Continue to product comparison
+                <button className="primary" type="button" onClick={() => navigateTo("/shortlist")}>
+                  Continue to product shortlist
                   <ArrowRight size={16} />
                 </button>
               </article>

@@ -54,6 +54,13 @@ Use cases:
 7. Backend updates filters and determines whether the scope is ready for comparison.
 8. Frontend requests shortlisted products or comparison recommendation.
 
+## Assistant Context Ownership
+The right-side AI Procurement Assistant must stay a single shell-level surface. The frontend renders it once through `AIAssistantPanel`, and all route-specific copy, actions, product CTAs, clean mode, and future persistence keys come from `buildAssistantContext(route)` in `src/data/assistantContext.ts`.
+
+Do not add page-local chatbot state or route-specific assistant components when extending a page. Add new assistant context fields to the shared `AssistantContext` shape first, then render them through the existing panel.
+
+Future persisted chat should use `AssistantContext.conversationScope` as the thread key. `route`, `productId`, and `reviewId` can be sent as metadata for grounding, but they should not create separate message stores unless the product intentionally needs a new conversation scope.
+
 ## Prompt Boundary
 AI prompts should ask for:
 - procurement need summary

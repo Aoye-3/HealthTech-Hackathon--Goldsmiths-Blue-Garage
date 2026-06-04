@@ -3,8 +3,6 @@ import {
   ClipboardCheck,
   FileSearch,
   Home,
-  MapPinned,
-  Scale,
   Search
 } from "lucide-react";
 import type { NavItem, RouteKey } from "../../types";
@@ -13,8 +11,6 @@ import { navigateTo } from "../../utils/routing";
 const navItems: NavItem[] = [
   { key: "need-definition", label: "Need Definition", href: "/need-definition", icon: Home },
   { key: "shortlist", label: "Product Shortlist", href: "/shortlist", icon: Search },
-  { key: "compare", label: "Product Comparison", href: "/compare", icon: Scale },
-  { key: "peer-evidence", label: "Peer Evidence", href: "/peer-evidence/surebp-connect", icon: MapPinned },
   { key: "approval-pack", label: "Approval Pack", href: "/approval-pack", icon: ClipboardCheck },
   { key: "outcomes", label: "Procurement Outcome", href: "/outcomes", icon: BarChart3 }
 ];
@@ -54,7 +50,7 @@ export function Sidebar({ activeRoute }: SidebarProps) {
         <FileSearch size={18} />
         <div>
           <strong>Current request</strong>
-          <span>Home BP monitoring solution</span>
+          <span>Airway care consumables</span>
         </div>
       </div>
       <div className="sidebar-footer">

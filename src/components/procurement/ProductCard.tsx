@@ -1,19 +1,26 @@
-import { Bookmark, CheckCircle2, Heart, MapPinned, Scale, Star } from "lucide-react";
+import { Bookmark, CheckCircle2, Eye, Heart, Star } from "lucide-react";
 import type { Product } from "../../types";
-import { money, navigateTo } from "../../utils/routing";
+import { money } from "../../utils/routing";
 
 interface ProductCardProps {
+  active?: boolean;
   product: Product;
   selected: boolean;
   onToggle: (productId: string) => void;
+  onViewDetails: (productId: string) => void;
 }
 
-export function ProductCard({ product, selected, onToggle }: ProductCardProps) {
+export function ProductCard({ active = false, product, selected, onToggle, onViewDetails }: ProductCardProps) {
   return (
-    <article className={`product-card ${selected ? "selected" : ""}`}>
-      <div className={`product-image ${product.imageTone}`}>
+    <article className={`product-card ${selected ? "selected" : ""} ${active ? "active" : ""}`}>
+      <button
+        aria-label={`View details for ${product.name}`}
+        className={`product-image ${product.imageTone}`}
+        onClick={() => onViewDetails(product.id)}
+        type="button"
+      >
         <span>{product.brand.slice(0, 2).toUpperCase()}</span>
-      </div>
+      </button>
       <div className="product-card-body">
         <div className="card-kicker">
           <span>
@@ -24,7 +31,9 @@ export function ProductCard({ product, selected, onToggle }: ProductCardProps) {
             <Bookmark size={17} />
           </button>
         </div>
-        <h3>{product.name}</h3>
+        <button className="card-title-button" onClick={() => onViewDetails(product.id)} type="button">
+          <h3>{product.name}</h3>
+        </button>
         <p>{product.category}</p>
         <div className="product-stats">
           <span>{product.organisationsUsing} NHS orgs</span>
@@ -42,13 +51,9 @@ export function ProductCard({ product, selected, onToggle }: ProductCardProps) {
             <Heart size={16} fill={selected ? "currentColor" : "none"} />
             {selected ? "Remove from shortlist" : "Add to comparison"}
           </button>
-          <button type="button" onClick={() => navigateTo(`/peer-evidence/${product.id}`)} className="secondary">
-            <MapPinned size={16} />
-            View evidence
-          </button>
-          <button type="button" onClick={() => navigateTo("/compare")} className="ghost">
-            <Scale size={16} />
-            Compare
+          <button type="button" onClick={() => onViewDetails(product.id)} className="secondary">
+            <Eye size={16} />
+            View details
           </button>
         </div>
       </div>
